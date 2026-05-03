@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>החווה בחבל — הרשמה לשיעורי רכיבה</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c23 30%, #6b8f3a 60%, #8b6914 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 520px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5c3d0e, #8b6914);
+            padding: 32px 24px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .limited-badge {
+            background: #c0392b;
+            color: white;
+            text-align: center;
+            padding: 10px 24px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .program-info {
+            background: #f9f5ee;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e8dcc8;
+        }
+
+        .program-info h2 {
+            color: #5c3d0e;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            background: white;
+            border-radius: 10px;
+            border-right: 4px solid #4a7c23;
+            margin-bottom: 8px;
+        }
+
+        .info-row:last-child { margin-bottom: 0; }
+
+        .info-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+        .info-text {
+            color: #333;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .info-text strong { color: #5c3d0e; }
+
+        .form-section {
+            padding: 28px 24px;
+        }
+
+        .form-section h2 {
+            color: #5c3d0e;
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .form-section .subtitle {
+            color: #777;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #444;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0d6c8;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #fefefe;
+            color: #333;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4a7c23;
+            box-shadow: 0 0 0 3px rgba(74, 124, 35, 0.15);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4a7c23, #2d5016);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(45, 80, 22, 0.3);
+        }
+
+        .submit-btn:active { transform: translateY(0); }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: default;
+            transform: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 16px 24px 24px;
+            color: #888;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .footer a {
+            color: #5c3d0e;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Success screen */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .success-message .checkmark {
+            width: 72px;
+            height: 72px;
+            background: #4a7c23;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .success-message h2 {
+            color: #2d5016;
+            margin-bottom: 12px;
+        }
+
+        .success-message p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .payment-btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #8b6914, #5c3d0e);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(92, 61, 14, 0.3);
+        }
+
+        .error { border-color: #e74c3c !important; }
+
+        .error-msg {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .header h1 { font-size: 1.5rem; }
+            .container { border-radius: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>🐴 שיעורי רכיבה טיפוליים</h1>
+            <p>החווה בחבל — הרשמה לשיעורים פרטניים</p>
+        </div>
+
+        <div class="limited-badge">
+            ⚠️ מספר המקומות מוגבל — הירשמו עכשיו
+        </div>
+
+        <div class="program-info">
+            <h2>📋 פרטי הפעילות</h2>
+            <div class="info-row">
+                <span class="info-icon">🗓️</span>
+                <div class="info-text"><strong>יום רביעי</strong> — פגישות שבועיות</div>
+            </div>
+            <div class="info-row">
+                <span class="info-icon">🕑</span>
+                <div class="info-text">שעות פעילות: <strong>14:00 – 16:00</strong></div>
+            </div>
+            <div class="info-row">
+                <span class="info-icon">🐎</span>
+                <div class="info-text">שיעור <strong>פרטני</strong> — ליווי אישי לכל רוכב</div>
+            </div>
+            <div class="info-row">
+                <span class="info-icon">📍</span>
+                <div class="info-text"><strong>החווה בחבל</strong></div>
+            </div>
+        </div>
+
+        <div id="registration-form">
+            <div class="form-section">
+                <h2>הרשמה לשיעור</h2>
+                <p class="subtitle">מלאו את הפרטים ותועברו לתשלום</p>
+
+                <form id="therapyForm" novalidate>
+
+                    <div class="form-group">
+                        <label for="childName">שם הילד / הילדה</label>
+                        <input type="text" id="childName" placeholder="שם פרטי ומשפחה" required>
+                        <div class="error-msg" id="childNameError">נא למלא שם הילד/ה</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">גיל</label>
+                        <select id="age" required>
+                            <option value="" disabled selected>בחרו גיל</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                        </select>
+                        <div class="error-msg" id="ageError">נא לבחור גיל</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parentName">שם הורה / אפוטרופוס</label>
+                        <input type="text" id="parentName" placeholder="שם פרטי ומשפחה" required>
+                        <div class="error-msg" id="parentNameError">נא למלא שם הורה/אפוטרופוס</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">טלפון</label>
+                        <input type="tel" id="phone" placeholder="050-000-0000" required dir="ltr" style="text-align: right;">
+                        <div class="error-msg" id="phoneError">נא למלא מספר טלפון תקין</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="preferredTime">שעה מועדפת</label>
+                        <select id="preferredTime" required>
+                            <option value="" disabled selected>בחרו שעה</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:30">14:30</option>
+                            <option value="15:00">15:00</option>
+                            <option value="15:30">15:30</option>
+                        </select>
+                        <div class="error-msg" id="timeError">נא לבחור שעה מועדפת</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">להרשמה ותשלום ←</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <div class="checkmark">✓</div>
+            <h2>נרשמת בהצלחה!</h2>
+            <p>
+                <span id="confirmName"></span>, תודה על ההרשמה!<br>
+                כעת יש לבצע תשלום דרך PayBox כדי לאשר את מקומכם.
+            </p>
+            <a href="https://links.payboxapp.com/2vYnIA5ZO2b" target="_blank" class="payment-btn">
+                מעבר לתשלום ב-PayBox
+            </a>
+            <p style="margin-top: 16px; font-size: 0.85rem; color: #777;">
+                או העתיקו את הלינק:<br>
+                <a href="https://links.payboxapp.com/2vYnIA5ZO2b" target="_blank" style="color: #5c3d0e; word-break: break-all;">
+                    https://links.payboxapp.com/2vYnIA5ZO2b
+                </a>
+            </p>
+        </div>
+
+        <div class="footer">
+            לפרטים נוספים: נתנאל <a href="tel:0525950524">052-595-0524</a> | צפריר <a href="tel:0525299868">052-529-9868</a>
+        </div>
+
+    </div>
+
+    <script>
+        // Replace with your new Google Apps Script URL after deployment
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRKJn-Tycnl1P-SNiOboS1STcqlfUEpUkSNBxJHUIXBBUUOy5Gqahp2TRx43UaTkjJ/exec';
+
+        const form = document.getElementById('therapyForm');
+        const registrationForm = document.getElementById('registration-form');
+        const successMessage = document.getElementById('successMessage');
+
+        function sendToSheet(data) {
+            var params = Object.keys(data).map(function(k) {
+                return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]);
+            }).join('&');
+            var img = new Image();
+            img.src = SCRIPT_URL + '?' + params;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let valid = true;
+
+            const childName = document.getElementById('childName');
+            const age = document.getElementById('age');
+            const parentName = document.getElementById('parentName');
+            const phone = document.getElementById('phone');
+            const preferredTime = document.getElementById('preferredTime');
+
+            document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+            document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+
+            if (!childName.value.trim()) {
+                childName.classList.add('error');
+                document.getElementById('childNameError').style.display = 'block';
+                valid = false;
+            }
+
+            if (!age.value) {
+                age.classList.add('error');
+                document.getElementById('ageError').style.display = 'block';
+                valid = false;
+            }
+
+            if (!parentName.value.trim()) {
+                parentName.classList.add('error');
+                document.getElementById('parentNameError').style.display = 'block';
+                valid = false;
+            }
+
+            if (!phone.value.trim() || phone.value.replace(/\D/g, '').length < 9) {
+                phone.classList.add('error');
+                document.getElementById('phoneError').style.display = 'block';
+                valid = false;
+            }
+
+            if (!preferredTime.value) {
+                preferredTime.classList.add('error');
+                document.getElementById('timeError').style.display = 'block';
+                valid = false;
+            }
+
+            if (valid) {
+                const submitBtn = form.querySelector('.submit-btn');
+                submitBtn.textContent = 'שולח...';
+                submitBtn.disabled = true;
+
+                sendToSheet({
+                    childName: childName.value.trim(),
+                    age: age.value,
+                    parentName: parentName.value.trim(),
+                    phone: phone.value.trim(),
+                    time: preferredTime.value,
+                    day: 'רביעי'
+                });
+
+                setTimeout(function() {
+                    document.getElementById('confirmName').textContent = parentName.value.trim();
+                    registrationForm.style.display = 'none';
+                    successMessage.style.display = 'block';
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
