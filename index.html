@@ -329,17 +329,7 @@
                     <div class="form-group">
                         <label for="preferredTime">שעה מועדפת</label>
                         <select id="preferredTime" required>
-                            <option value="" disabled selected>בחרו שעה</option>
-                            <option value="13:00">13:00</option>
-                            <option value="13:30">13:30</option>
-                            <option value="14:00">14:00</option>
-                            <option value="14:30">14:30</option>
-                            <option value="15:00">15:00</option>
-                            <option value="15:30">15:30</option>
-                            <option value="19:00">19:00</option>
-                            <option value="19:30">19:30</option>
-                            <option value="20:00">20:00</option>
-                            <option value="זמן/יום אחר">זמן/יום אחר</option>
+                            <option value="" disabled selected>טוען שעות...</option>
                         </select>
                         <div class="error-msg" id="timeError">נא לבחור שעה מועדפת</div>
                     </div>
@@ -388,6 +378,44 @@
             var img = new Image();
             img.src = SCRIPT_URL + '?' + params;
         }
+
+        function removeSlotFromDropdown(slot) {
+            var select = document.getElementById('preferredTime');
+            Array.from(select.options).forEach(function(opt) {
+                if (opt.value === slot) opt.remove();
+            });
+        }
+
+        function formatSlot(slot) {
+            if (slot === 'זמן/יום אחר') return slot;
+            if (/^\d{2}:\d{2}$/.test(slot)) return slot;
+            var match = slot.match(/(\d{1,2}):(\d{2})/);
+            if (match) return match[1].padStart(2, '0') + ':' + match[2];
+            return slot;
+        }
+
+        function loadAvailableSlots() {
+            var cbName = 'slots_cb_' + Date.now();
+            window[cbName] = function(slots) {
+                var select = document.getElementById('preferredTime');
+                select.innerHTML = '<option value="" disabled selected>בחרו שעה</option>';
+                slots.map(formatSlot).sort(function(a, b) { return a.localeCompare(b); }).forEach(function(s) {
+                    var opt = document.createElement('option');
+                    opt.value = s; opt.textContent = s;
+                    select.appendChild(opt);
+                });
+                var other = document.createElement('option');
+                other.value = 'זמן/יום אחר';
+                other.textContent = 'זמן/יום אחר';
+                select.appendChild(other);
+                delete window[cbName];
+            };
+            var script = document.createElement('script');
+            script.src = SCRIPT_URL + '?action=getSlots&callback=' + cbName + '&t=' + Date.now();
+            document.head.appendChild(script);
+        }
+
+        loadAvailableSlots();
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -447,6 +475,7 @@
                 });
 
                 setTimeout(function() {
+                    removeSlotFromDropdown(preferredTime.value);
                     document.getElementById('confirmName').textContent = parentName.value.trim();
                     registrationForm.style.display = 'none';
                     successMessage.style.display = 'block';
