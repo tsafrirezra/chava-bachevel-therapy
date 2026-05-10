@@ -112,6 +112,7 @@ Registrations are tracked by marking the "slots" tab column B as "תפוס" when
 - **Day:** יום רביעי
 - **Hours:** 13:00 – 20:00 (slots every 30 minutes)
 - **Type:** פרטני (individual sessions)
+- **Price:** 150 ש״ח לשיעור
 - **Contacts:** נתנאל 052-595-0524 | צפריר 052-529-9868
 
 ## Design

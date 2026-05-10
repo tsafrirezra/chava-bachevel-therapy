@@ -68,6 +68,9 @@ Use the admin panel at `/admin.html` — no code changes needed.
 ### Change activity hours display text
 Edit line containing `שעות פעילות` in `index.html`.
 
+### Change price per session
+Search for `150 ש״ח` in `index.html` — appears in the program info section.
+
 ### Change admin password
 In `admin.html`: `const ADMIN_PASSWORD = 'chavah2025'`
 
